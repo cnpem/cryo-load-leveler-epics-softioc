@@ -1,0 +1,83 @@
+record(ao, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-SP")
+{
+    field(DESC, "Desired CLL total power")
+    field(EGU, "W")
+    field(PINI, "YES")
+}
+
+record(ai, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-RB")
+{
+    field(DESC, "Desired CLL total power")
+    field(EGU, "W")
+    field(INP, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-SP CP")
+}
+
+record(calc, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-Mon")
+{
+    field(DESC, "Sum of RF and Heater powers")
+    field(EGU, "W")
+
+    field(INPA, "$(P)$(R)$(CRYO_MOD):EB$(CRYO_MOD)10_CLLHeaterPower-Mon CP")
+    field(INPB, "$(P)$(RF_R)$(SRF_CAV):PwrW-Mon CP")
+    field(CALC, "A+B")
+}
+
+record(calcout, "$(P)$(R)$(CRYO_MOD):TargetHeaterPwr")
+{
+    field(DESC, "Heater pwr to reach desired total pwr")
+    field(EGU, "W")
+
+    field(SDIS, "$(P)$(R)$(CRYO_MOD):CLLAutoEn-Sel")
+    field(DISV, "0")
+
+    field(INPA, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-SP CP")
+    field(INPB, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-Mon CP")
+    field(INPC, "$(P)$(R)$(CRYO_MOD):EB$(CRYO_MOD)10_CLLInternalRefPower-Mon")
+    field(INPD, "$(P)$(R)$(CRYO_MOD):CLLPowerDeadband-SP")
+
+    field(CALC, "MOD(A-B)>D")
+    field(OCAL, "(A-B)+C")
+
+    # When the error is greater than the deadband
+    # write the corrected power to the heater
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use OCAL")
+    field(OUT, "$(P)$(R)$(CRYO_MOD):EB$(CRYO_MOD)10_CLLInternalRefPower-SP")
+}
+
+record(bo, "$(P)$(R)$(CRYO_MOD):CLLAutoEn-Sel")
+{
+    field(DESC, "Enable CLL auto-adjust")
+    field(PINI, "YES")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+
+    field(FLNK, "$(P)$(R)$(CRYO_MOD):TargetHeaterPwr")
+}
+
+record(bi, "$(P)$(R)$(CRYO_MOD):CLLAutoEn-Sts")
+{
+    field(DESC, "Enable CLL auto-adjust")
+
+    field(INP, "$(P)$(R)$(CRYO_MOD):CLLAutoEn-Sel CP")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+}
+
+record(ao, "$(P)$(R)$(CRYO_MOD):CLLPowerDeadband-SP")
+{
+    field(DESC, "deadband for auto-adjust")
+    field(EGU , "W")
+    field(PINI, "YES")
+
+    field(VAL, "0.1")
+    field(PREC, "3")
+}
+
+record(ai, "$(P)$(R)$(CRYO_MOD):CLLPowerDeadband-RB")
+{
+    field(DESC, "deadband for auto-adjust")
+    field(EGU , "W")
+    field(PREC, "3")
+    field(INP, "$(P)$(R)$(CRYO_MOD):CLLPowerDeadband-SP CP")
+}
