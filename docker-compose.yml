@@ -1,0 +1,13 @@
+services:
+  ioc:
+    image: ghcr.io/cnpem/cryo-load-leveler-epics-softioc:$TAG
+    network_mode: "host"
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+      target: static-link
+      labels:
+        org.opencontainers.image.source: https://github.com/cnpem/cryo-load-leveler-epics-softioc
+      args:
+        REPONAME: cryo-load-leveler-epics-softioc
+        RUNDIR: /opt/cryo-load-leveler-epics-softioc/iocBoot/ioccryoLeveler
