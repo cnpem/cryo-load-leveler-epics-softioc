@@ -1,7 +1,4 @@
-#!../../bin/linux-x86_64/cryo-load-leveler
-
-#- You may have to change cryo-load-leveler to something else
-#- everywhere it appears in this file
+#!/opt/cryo-load-leveler-epics-softioc/bin/linux-x86_64/cryoLeveler
 
 < envPaths
 
