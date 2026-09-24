@@ -31,17 +31,11 @@ record(calcout, "$(P)$(R)$(CRYO_MOD):TargetHeaterPwr")
     field(DISV, "0")
 
     field(INPA, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-SP CP")
-    field(INPB, "$(P)$(R)$(CRYO_MOD):CLLTotalPower-Mon CP")
-    field(INPC, "$(P)$(R)$(CRYO_MOD):EB$(CRYO_MOD)10_CLLInternalRefPower-RB")
-    field(INPD, "$(P)$(R)$(CRYO_MOD):CLLPowerDeadband-SP")
+    field(INPB, "$(P)$(RF_R)$(SRF_CAV):PwrW-Mon CP")
 
-    field(CALC, "ABS(A-B)>D")
-    field(OCAL, "(A-B)+C")
+    field(CALC, "A-B")
 
-    # When the error is greater than the deadband
-    # write the corrected power to the heater
-    field(OOPT, "When Non-zero")
-    field(DOPT, "Use OCAL")
+    field(OOPT, "On Change")
     field(OUT, "$(P)$(R)$(CRYO_MOD):EB$(CRYO_MOD)10_CLLInternalRefPower-SP")
 }
 
@@ -72,6 +66,8 @@ record(ao, "$(P)$(R)$(CRYO_MOD):CLLPowerDeadband-SP")
 
     field(VAL, "0.1")
     field(PREC, "3")
+
+    field(OUT, "$(P)$(R)$(CRYO_MOD):TargetHeaterPwr.MDEL")
 }
 
 record(ai, "$(P)$(R)$(CRYO_MOD):CLLPowerDeadband-RB")
